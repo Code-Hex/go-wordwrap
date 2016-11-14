@@ -23,16 +23,16 @@ func WrapString(s string, lim uint) string {
 
 	for _, char := range s {
 		if char == '\n' {
-			if buffLen(wordBuf) == 0 {
-				if current+buffLen(spaceBuf) > lim {
+			if bufLen(wordBuf) == 0 {
+				if current+bufLen(spaceBuf) > lim {
 					current = 0
 				} else {
-					current += buffLen(spaceBuf)
+					current += bufLen(spaceBuf)
 					spaceBuf.WriteTo(buf)
 				}
 				spaceBuf.Reset()
 			} else {
-				current += buffLen(spaceBuf) + buffLen(wordBuf)
+				current += bufLen(spaceBuf) + bufLen(wordBuf)
 				spaceBuf.WriteTo(buf)
 				spaceBuf.Reset()
 				wordBuf.WriteTo(buf)
@@ -41,8 +41,8 @@ func WrapString(s string, lim uint) string {
 			buf.WriteRune(char)
 			current = 0
 		} else if unicode.IsSpace(char) {
-			if buffLen(spaceBuf) == 0 || buffLen(wordBuf) > 0 {
-				current += buffLen(spaceBuf) + buffLen(wordBuf)
+			if bufLen(spaceBuf) == 0 || bufLen(wordBuf) > 0 {
+				current += bufLen(spaceBuf) + bufLen(wordBuf)
 				spaceBuf.WriteTo(buf)
 				spaceBuf.Reset()
 				wordBuf.WriteTo(buf)
@@ -52,24 +52,24 @@ func WrapString(s string, lim uint) string {
 			spaceBuf.WriteRune(char)
 		} else {
 
-			wordBuf.WriteRune(char)
-
-			if current+buffLen(spaceBuf)+buffLen(wordBuf) > lim && buffLen(wordBuf) < lim {
-				buf.WriteRune('\n')
-				current = 0
-				spaceBuf.Reset()
-			} else if current+buffLen(wordBuf) == lim {
+			l := uint(runewidth.RuneWidth(char))
+			if current+bufLen(wordBuf)+l > lim {
 				wordBuf.WriteTo(buf)
 				buf.WriteRune('\n')
 				current = 0
 				spaceBuf.Reset()
 				wordBuf.Reset()
+			} else if current+bufLen(spaceBuf)+bufLen(wordBuf)+l > lim && bufLen(wordBuf)+l < lim {
+				buf.WriteRune('\n')
+				current = 0
+				spaceBuf.Reset()
 			}
+			wordBuf.WriteRune(char)
 		}
 	}
 
 	if wordBuf.Len() == 0 {
-		if current+uint(spaceBuf.Len()) <= lim {
+		if current+bufLen(spaceBuf) <= lim {
 			spaceBuf.WriteTo(buf)
 		}
 	} else {
@@ -80,6 +80,6 @@ func WrapString(s string, lim uint) string {
 	return buf.String()
 }
 
-func buffLen(b bytes.Buffer) uint {
+func bufLen(b bytes.Buffer) uint {
 	return uint(runewidth.StringWidth(b.String()))
 }
