@@ -1,16 +1,30 @@
-# go-wordwrap
+# go-wordwrap(Forked)
 
 `go-wordwrap` (Golang package: `wordwrap`) is a package for Go that
 automatically wraps words into multiple lines. The primary use case for this
 is in formatting CLI output, but of course word wrapping is a generally useful
-thing to do.
+thing to do.  
+original: [mitchellh/go-wordwrap](https://github.com/mitchellh/go-wordwrap)
+## What changed from the original
 
+```go
+wrapped := wordwrap.WrapString("foobarbaz", 3)
+fmt.Println(wrapped)
+```
+
+Would output:
+
+```
+foob
+arba
+z
+```
 ## Installation and Usage
 
-Install using `go get github.com/mitchellh/go-wordwrap`.
+Install using `go get github.com/Code-Hex/go-wordwrap`.
 
 Full documentation is available at
-http://godoc.org/github.com/mitchellh/go-wordwrap
+http://godoc.org/github.com/Code-Hex/go-wordwrap
 
 Below is an example of its usage ignoring errors:
 
