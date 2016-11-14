@@ -56,6 +56,12 @@ func WrapString(s string, lim uint) string {
 				buf.WriteRune('\n')
 				current = 0
 				spaceBuf.Reset()
+			} else if current+uint(wordBuf.Len()) == lim {
+				wordBuf.WriteTo(buf)
+				buf.WriteRune('\n')
+				current = 0
+				spaceBuf.Reset()
+				wordBuf.Reset()
 			}
 		}
 	}

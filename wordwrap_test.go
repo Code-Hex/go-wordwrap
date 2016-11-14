@@ -19,7 +19,7 @@ func TestWrapString(t *testing.T) {
 		// We do not break words.
 		{
 			"foobarbaz",
-			"foobarbaz",
+			"foob\narba\nz",
 			4,
 		},
 		// Lines are broken at whitespace.
@@ -32,7 +32,7 @@ func TestWrapString(t *testing.T) {
 		// are too long. We do not break words.
 		{
 			"foo bars bazzes",
-			"foo\nbars\nbazzes",
+			"foo\nbars\nbazz\nes",
 			4,
 		},
 		// A word that would run beyond the width is wrapped.
@@ -79,7 +79,7 @@ func TestWrapString(t *testing.T) {
 	for i, tc := range cases {
 		actual := WrapString(tc.Input, tc.Lim)
 		if actual != tc.Output {
-			t.Fatalf("Case %d Input:\n\n`%s`\n\nActual Output:\n\n`%s`", i, tc.Input, actual)
+			t.Fatalf("Case %d Input:\n\n`%s`\n\nActual Output:\n\n`%s` expected `%s`", i, tc.Input, actual, tc.Output)
 		}
 	}
 }
