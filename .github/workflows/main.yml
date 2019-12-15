@@ -1,0 +1,29 @@
+on:
+  push:
+    branches:
+      - "master"
+    tags:
+      - "v*.*.*"
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+    - name: Test
+      run: |
+        go test -v ./...
+    - name: Lint
+      run: |
+        go get golang.org/x/lint/golint
+        export PATH="$PATH:$(go env GOPATH)/bin"
+        make lint
+      env:
+        GO111MODULE: off
