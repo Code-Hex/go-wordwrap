@@ -16,8 +16,7 @@ func trimAnsiColor(s string) (ret string) {
 		if startPos == 0 {
 			ret = ret[endPos:]
 		} else {
-			tmp := ret[:startPos]
-			ret = tmp + ret[endPos:]
+			ret = ret[:startPos] + ret[endPos:]
 		}
 	}
 }
@@ -40,8 +39,8 @@ func rangeAnsiColor(s string) (int, int) {
 			// return 5, (5 + len(ansi) == 15)
 			return escIndex, escIndex + (len(esc) + i + 1)
 		}
-		if unicode.IsDigit(c) || c == ';' {
-			continue
+		if !unicode.IsDigit(c) && c != ';' {
+			break
 		}
 	}
 
